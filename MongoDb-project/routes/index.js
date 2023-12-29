@@ -18,7 +18,6 @@ router.get('/create', async function(req,res){
 });
 
 //How to perform a case-insensitive search in Mongoose?
-
 router.get('/find', async function(req,res){
 
   try{
@@ -58,5 +57,22 @@ router.get('/findDate', async function(req,res){
 });
 
 //How can I filter documents based on the existence of a field in Mongoose?
+router.get('/findField',async function(req,res){
+ const field = await userModel.find({ nickName:{ $exists: true}});
+ res.send(field);
+});
+
+//How to filter documents based on a specific field's length in Mongoose? 
+router.get('/findInRange', async function(req,res){
+  const filterData = await userModel.find({
+    $expr:{
+      $and:[
+        {$gte:[{$strLenCP:'$userName'},1]},
+        {$lte:[{$strLenCP:'$userName'},10]}
+      ]
+    }
+  });
+  res.send(filterData);
+})
 
 module.exports = router;
